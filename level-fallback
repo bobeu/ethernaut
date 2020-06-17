@@ -1,0 +1,5 @@
+#How To
+From the browser console:
+    await contract.contribute("1000000000000000000") calls an implied function contribute(), make contribution in wei.
+    await sendTransaction(0.0089) global function targeted at fallback function claims the contract.
+    await contract.withdraw() reduces the balance to 0
