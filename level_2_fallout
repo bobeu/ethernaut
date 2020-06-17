@@ -1,0 +1,3 @@
+#How To
+    From the console:
+      Vulnerability in contructor. Calls await contract.fal1out() funcction claims the ownership.
