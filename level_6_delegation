@@ -1,0 +1,3 @@
+#How To
+claimed the ownership of instance by calling Delegate.pwn in target contract Delegation using low levl function in fallback function
+from contract Delegation.
