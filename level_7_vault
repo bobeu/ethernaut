@@ -1,0 +1,50 @@
+#How To
+-------
+Task:is to unlock the vault by passing the right password. 
+
+pragma solidity ^0.5.0;
+
+contract Vault {
+  bool public locked;
+  bytes32 private password;
+
+  constructor(bytes32 _password) public {
+    locked = true;
+    password = _password;
+  }
+
+  function unlock(bytes32 _password) public {
+    if (password == _password) {
+      locked = false;
+    }
+  }
+}
+
+Solution
+--------
+1. Compile contract using Truffle while Ganache GUi is open or rather use Ganache-CLI
+    - Truffle init
+    - truffle compile
+2. truffle deploy
+3. truffle console --network Ropsten - Uncomment the network parameters in the config file
+4. launch web3.eth.getStorageAt(instance.address, 1, (err, res)=>{console.log(res)}); to access the storage at array 1 in the console.
+    It returns hexadecimal object which is a bytes32 hash of "A very strong secret password :)"
+    
+ 5. Now write an instance of the contract and deploy in Remix (injected web3 - Ropsten network)
+    setting given instance address as the instance. Then unlock() 
+
+      contract crackVault {
+        bool public locked;
+        bytes32 private password;
+        Vault public vault = Vault(0xF03bC96798a298Ef4B664D0EA9E06d9990a8B008);
+
+        constructor(bytes32 _password) public {
+          locked = true;
+          password = _password;
+        }
+        function unlock(bytes32 _password) public {
+                vault.unlock(_password);
+
+        }
+        
+  Submit instance.
